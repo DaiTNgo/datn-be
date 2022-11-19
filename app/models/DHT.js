@@ -1,17 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const Power = new Schema(
+const DHT = new Schema(
   {
-    amp: {
+    temperature: {
       type: String,
       require: true,
     },
-    uid: {
-      type: String,
-      require: true,
-    },
-    totalTime: {
+    humidity: {
       type: String,
       require: true,
     },
@@ -23,4 +19,4 @@ const Power = new Schema(
     },
   }
 );
-module.exports = mongoose.model('power', Power);
+module.exports = mongoose.model('DHT', DHT);

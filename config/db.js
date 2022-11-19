@@ -1,20 +1,9 @@
 const mongoose = require('mongoose');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
-const uri = `mongodb+srv://daingo:123123123@doantn.yr4d95f.mongodb.net/?retryWrites=true&w=majority`;
-async function connect() {
-  try {
-    await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log('Connecting successfully');
-  } catch (error) {
-    console.log('Connecting failure');
-    process.exit(1);
-  }
-}
+const uri =
+  'mongodb+srv://daingo:t1ger1@database-dnt.dqvj7tl.mongodb.net/?retryWrites=true&w=majority';
 
-// const { MongoClient, ServerApiVersion } = require('mongodb');
 // const client = new MongoClient(uri, {
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
@@ -25,6 +14,21 @@ async function connect() {
 //   // perform actions on the collection object
 //   client.close();
 // });
+
+async function connect() {
+  try {
+    await mongoose.connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverApi: ServerApiVersion.v1,
+    });
+    console.log('Connecting successfully');
+  } catch (error) {
+    console.log('Connecting failure', error);
+    process.exit(1);
+  }
+}
+
 module.exports = {
   connect,
 };

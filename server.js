@@ -1,5 +1,4 @@
 require('dotenv').config();
-const { log } = require('console');
 const http = require('http');
 const socket = require('socket.io');
 const app = require('./app');
@@ -26,5 +25,5 @@ io.on('connection', (socket) => {
 
 server.listen(PORT, async () => {
   console.log(`Listening on ${PORT}`);
-  // DB.connect();
+  DB.connect();
 });
