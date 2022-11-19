@@ -8,22 +8,22 @@ const PORT = process.env.PORT || 5000;
 const server = http.Server(app);
 
 const io = socket(server, {
-  cors: {
-    origin: '*',
-    methods: ['PUT', 'GET', 'POST', 'DELETE', 'OPTIONS', 'PATCH'],
-    credentials: false,
-  },
+    cors: {
+        origin: 'https://datn-fe.netlify.app',
+        methods: ['PUT', 'GET', 'POST', 'DELETE', 'OPTIONS', 'PATCH'],
+        credentials: false,
+    },
 });
 globalThis.io = io;
 
 io.on('connection', (socket) => {
-  socket.on('daingo', (msg) => {
-    socket.emit('test', `Message::::::${msg}`);
-  });
-  console.log('a user connected');
+    socket.on('daingo', (msg) => {
+        socket.emit('test', `Message::::::${msg}`);
+    });
+    console.log('a user connected');
 });
 
 server.listen(PORT, async () => {
-  console.log(`Listening on ${PORT}`);
-  DB.connect();
+    console.log(`Listening on ${PORT}`);
+    DB.connect();
 });
