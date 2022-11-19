@@ -3,7 +3,7 @@ const router = express.Router();
 const UvController = require('../app/controllers/uv.controller.js');
 
 router.route('/').post(UvController.send);
-router.route('/').delete(UvController.deleteAll);
 router.route('/').get(UvController.getAll);
+// router.route('/').delete(UvController.deleteAll);
 
 module.exports = router;

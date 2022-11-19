@@ -6,9 +6,11 @@ const UV = new Schema({
 		type: String,
 		required: true,
 	},
+},
+{
 	timestamps: {
 		createdAt: true,
-			updatedAt: false,
+		updatedAt: false,
 	},
 });
 
