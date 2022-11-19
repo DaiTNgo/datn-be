@@ -28,7 +28,7 @@ app.use((_, res, next) => {
 });
 
 app.get('/', (_, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.json({message: 'Welcome to the application.'});
 });
 
 route(app);
