@@ -12,10 +12,10 @@ app.use(
     })
 );
 app.use(cookieParser());
-app.use(cors());
+// app.use(cors());
 
 app.use((_, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://datn-fe.netlify.app/');
+    res.header('Access-Control-Allow-Origin', '*');
     res.header(
         'Access-Control-Allow-Headers',
         'Origin, X-Requested-With, Content-Type, Accept, Authorization'

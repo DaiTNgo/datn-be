@@ -9,7 +9,7 @@ const server = http.Server(app);
 
 const io = socket(server, {
     cors: {
-        origin: 'https://datn-fe.netlify.app',
+        origin: '*',
         methods: ['PUT', 'GET', 'POST', 'DELETE', 'OPTIONS', 'PATCH'],
         credentials: false,
     },
