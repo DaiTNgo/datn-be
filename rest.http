@@ -2,42 +2,107 @@ POST http://localhost:5000/api/rain
 Content-Type: application/json
 
 {
-    "value": "21"
+  "count": "1",
+  "status": "start"
 }
+
+###
+POST http://localhost:5000/api/rain
+Content-Type: application/json
+
+{
+  "count": "30",
+  "status": "inProgress"
+}
+
+###
+POST http://localhost:5000/api/rain
+Content-Type: application/json
+
+{
+  "count": "30",
+  "status": "end"
+}
+
+###
+DELETE http://localhost:5000/api/car
 
 ###
 GET http://localhost:5000/api/rain
 
 
 ###
-GET https://doantnbk.herokuapp.com/api/current-time
+POST http://localhost:5000/api/dht
+Content-Type: application/json
 
+{
+  "humidity": "86",
+  "temperature": "32",
+  "createdAt": "10"
+}
+
+###
+GET http://localhost:5000/api/dht?time=1669540634836&type=date
 
 
 ###
-GET http://localhost:3000/api
+GET http://localhost:5000/api/dht?time=1669454161395&type=month
 
 ###
 DELETE  http://localhost:3000/api/delete
 Content-Type: application/json
 
 {
-    "startDay": "2021-11-07 00:00:" ,
-    "endDay": "2021-11-09 00:00:" 
+  "startDay": "2021-11-07 00:00:",
+  "endDay": "2021-11-09 00:00:"
 }
 
 ###
-DELETE  http://localhost:3000/logout
+GET http://localhost:5000/api/uv?time=1669454161395&type=month
 
 ###
-POST http://solar-tracking-dut.herokuapp.com/api/date
+GET http://localhost:5000/api/uv?time=1669540634836&type=date
+
+###
+POST http://localhost:5000/api/uv
+Content-Type: application/json
 
 {
-    "data":{
-        "currentDate":"2022-02-17T07:35:48.159+00:00",
-        "nextDate":"2022-02-18T07:35:48.159+00:00"
-    }
+  "uv": "86",
+  "createdAt": "10"
 }
 
 ###
-GET http://localhost:3000/api/current-time
+POST http://localhost:5000/api/sensor
+Content-Type: application/json
+
+{
+  "status": "1",
+  "order": "4"
+}
+
+###
+GET http://localhost:5000/api/sensor
+
+###
+GET http://localhost:5000/api/car
+
+###
+POST http://localhost:5000/api/car
+Content-Type: application/json
+
+{
+  "uid": "2",
+  "timeStart": "1669540491112",
+  "status": "in"
+}
+
+###
+POST http://localhost:5000/api/car
+Content-Type: application/json
+
+{
+  "uid": "1",
+  "timeEnd": "1669548061864",
+  "status": "out"
+}

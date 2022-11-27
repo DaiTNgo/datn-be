@@ -1,18 +1,20 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const STATUS = require('../utils/rain.constant');
 
 const Rain = new Schema(
-  {
-    rain: {
-      type: String,
-      require: true,
+    {
+      count: Number,
+      createdAt: Date,
+      timeStart: Date,
+      timeEnd: Date,
+      totalTime: Number,
     },
-  },
-  {
-    timestamps: {
-      createdAt: true,
-      updatedAt: false,
+    {
+      timestamps: {
+        createdAt: false,
+        updatedAt: false,
+      },
     },
-  }
 );
 module.exports = mongoose.model('rain', Rain);

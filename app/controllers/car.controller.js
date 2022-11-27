@@ -1,146 +1,88 @@
-const DhtModel = require('../models/DHT');
-const RainModel = require('../models/Rain');
-const {groupBy, getMinMax} = require('../utils/groupBy');
+const CarModel = require('../models/Car');
+const { groupBy, getMinMax } = require('../utils/groupBy');
 
 class DHT {
   // [POST] /
   async send(req, res) {
     try {
-      const {humidity, temperature, createdAt} = req.body;
-      const resp = await DhtModel.create({temperature, humidity, createdAt});
-      res.status(201).json({message: 'success', resp});
+      const { uid, timeEnd, timeStart, status } = req.body;
+      let resp;
+      if (status == 'in') {
+        resp = await CarModel.findOneAndUpdate(
+          { uid },
+          { uid, timeStart, exist: true }
+        );
+
+        if (!resp) resp = await CarModel.create({ uid, timeStart });
+
+        // tinh tien
+        // socket.emit('price-car', {
+        //   status: 'in',
+        //   uid,
+        //   time: timeStart,
+        // });
+      }
+
+      if (status == 'out') {
+        const car = await CarModel.findOne({ uid });
+
+        resp = await CarModel.findOneAndUpdate(
+          {
+            uid,
+          },
+          {
+            uid,
+            exist: false,
+          }
+        );
+
+        // socket.emit('price-car', {
+        //   status: 'out',
+        //   uid,
+        //   totalTime: new Date().getTime() - car.timeStart,
+        //   time: car.timeStart,
+        // });
+      }
+      res.status(201).json({ message: 'success', resp });
     } catch (error) {
-      res.status(400).json({message: 'Send data fail', error: error.messages});
+      res
+        .status(400)
+        .json({ message: 'Send data fail', error: error.messages });
     }
   }
 
   async deleteAll(req, res) {
     try {
-      await DhtModel.deleteMany();
-      res.status(201).json({message: 'success'});
+      await CarModel.deleteMany();
+      res.status(201).json({ message: 'success' });
     } catch (error) {
-      res.status(400).json({message: 'Send data fail', error: error.messages});
+      res
+        .status(400)
+        .json({ message: 'Send data fail', error: error.messages });
     }
   }
 
   async getAll(req, res) {
     try {
-      const resp = await DhtModel.find(
-          {
-            amp: {$ne: null},
-          },
-          {},
-          {sort: {createdAt: -1}},
-      ).lean();
-      res.status(200).json({resp});
+      const resp = await CarModel.find({
+        exist: { $ne: false },
+      })
+        .sort({ order: 1 })
+        .lean();
+      res.status(200).json({ resp });
     } catch (error) {
-      res.status(400).json({message: 'Get data fail', error: error.message});
+      res.status(400).json({ message: 'Get data fail', error: error.message });
     }
   }
-
-  async getValue(req, res) {
+  async getInfoCard(req, res) {
     try {
-      const {time, type} = req.query;
-      if (!time) {
-        const resp = await DhtModel.find(
-            {
-              temperature: {$ne: null},
-              humidity: {$ne: null},
-            },
-            {},
-            {sort: {createdAt: -1}},
-        ).lean();
-
-        return res.status(200).json({resp});
-      }
-
-      const year = new Date(+time).getFullYear();
-      const month = new Date(+time).getMonth() + 1;
-      const date = new Date(+time).getDate();
-
-      let match = {};
-
-      if (type == 'month') {
-        match = {
-          $match: {
-            month,
-            year,
-          },
-        };
-      }
-
-      if (type == 'date') {
-        match = {
-          $match: {
-            month,
-            year,
-            date,
-          },
-        };
-      }
-
-      let resp = await DhtModel.aggregate([
-        {
-          $project: {
-            temperature: 1,
-            humidity: 1,
-            year: {$year: '$createdAt'},
-            month: {
-              $month: '$createdAt',
-            },
-            date: {
-              $dayOfMonth: '$createdAt',
-            },
-            hour: {
-              $hour: '$createdAt',
-            },
-          },
-        },
-        match,
-      ]).sort({createdAt: -1});
-      let temp;
-      let hum;
-      if (type == 'date') {
-        const r = getMinMax(resp, 'date');
-        temp = r.temp;
-        hum = r.hum;
-      }
-
-      if (type === 'month') {
-        const tmp = [];
-        resp = groupBy(resp, 'date');
-        for (const [key, value] of Object.entries(resp)) {
-          const t = value.reduce(
-              (rs, i) => {
-                return {
-                  temperature: +rs.temperature + +i.temperature,
-                  humidity: +rs.humidity + +i.humidity,
-
-                };
-              },
-              {temperature: 0, humidity: 0},
-          );
-          tmp.push({
-            date: key,
-            month,
-            year,
-            temperature: t.temperature / value.length,
-            humidity: t.humidity / value.length,
-          });
-        }
-
-        const r = getMinMax(tmp, 'month');
-        temp = r.temp;
-        hum = r.hum;
-        resp = tmp;
-      }
-
-      res.status(200).json({resp, temp, hum});
+      const { uid } = req.query;
+      const resp = await CarModel.findOne({ uid });
+      res.status(200).json({ resp });
     } catch (error) {
-      res.status(400).json({message: 'Get data fail', error: error.message});
+      res.status(400).json({ message: 'Get data fail', error: error.message });
     }
   }
-
   // // ------------------------------------
   // // [GET] /api/time {dev}
   // async receive(req, res) {

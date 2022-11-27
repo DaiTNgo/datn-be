@@ -3,7 +3,7 @@ const router = express.Router();
 const RainController = require('../app/controllers/rain.controller.js');
 
 router.route('/').post(RainController.send);
-// router.route('/').delete(RainController.deleteAll);
-router.route('/').get(RainController.getAll);
+router.route('/').delete(RainController.deleteAll);
+router.route('/').get(RainController.getValue);
 
 module.exports = router;
